@@ -316,7 +316,8 @@
 }
 
     .cabecalhoDaColecao-titulo span {
-        color: #ffaa60;
+        /*color: #ffaa60;*/
+        color: #CA5100;
     }
 
 .cabecalhoDaColecao-icone {
@@ -784,7 +785,8 @@ body {
 .homeCall {
     padding-top: .8em;
     padding-bottom: .8em;
-    background-color: #ffaa60;
+    /*background-color: #ffaa60;*/
+    background-color: #CA5100;
     font-family: "open-sans", sans-serif;
     font-size: 1.8em;
     font-weight: 700;
@@ -1835,7 +1837,8 @@ a {
 }
 
     .vitrineDaColecao-titulo span {
-        color: #ffaa60;
+        /*color: #ffaa60;*/
+        color: #CA5100;
         font-weight: bold;
         font-size: 1.27em;
     }
@@ -2042,7 +2045,8 @@ a {
     }
 
 .buscaPrincipal {
-    background-color: #ffaa60;
+    /*background-color: #ffaa60;*/
+    background-color: #CA5100;
     font-size: 1rem;
     text-align: center;
     display: inline-block;
@@ -2097,7 +2101,8 @@ a {
 }
 
 .colecoesDaCDC {
-    background-color: #ffaa60;
+    /*background-color: #ffaa60;*/
+    background-color: #CA5100;
     font-size: 1rem;
     padding: .5em 2em;
     list-style: none;

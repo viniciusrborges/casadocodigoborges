@@ -1,0 +1,144 @@
+﻿@model CasaDoCodigo.Model.Cart
+@{
+    ViewData["Title"] = "Home Page";
+}
+
+<main>
+    <style>
+        tr:hover .button-container {
+            display: block;
+        }
+        .button-container {
+            display: none;
+            position: relative;
+        }
+        .formularioDoCarrinho-item-button-top, .formularioDoCarrinho-item-button-bottom {
+            position: absolute;
+            right: -7px;
+        }
+
+            .formularioDoCarrinho-item-button-top button, .formularioDoCarrinho-item-button-bottom button {
+                width: 20px;
+                height: 20px;
+                display: block;
+            }
+
+        .formularioDoCarrinho-item-button-top {
+            top: -23px;
+        }
+        .formularioDoCarrinho-item-button-bottom {
+            top: -3px;
+        }
+
+
+        .formularioDoCarrinho-item-button {
+            background-color: transparent;
+            border: none;
+            color: black;
+            text-align: center;
+            text-decoration: none;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        .formularioDoCarrinho-item-button:hover {
+            background-color: #E4A830;
+        }
+    </style>
+
+    <section class="infoSection container">
+        <h2 class="infoSection-titulo">Seu carrinho</h2>
+
+        <table class="formularioDoCarrinho-tabela">
+            <thead class="formularioDoCarrinho-cabecalho">
+                <tr>
+                    <th></th>
+                    <th class="formularioDoCarrinho-cabecalho-item">Item</th>
+                    <th class="formularioDoCarrinho-cabecalho-item formularioDoCarrinho-cabecalho-preco">Preço</th>
+                    <th class="formularioDoCarrinho-cabecalho-item">Qtd</th>
+                    <th class="formularioDoCarrinho-cabecalho-item">Total</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.Itens)
+                {
+                    <tr data-book="@item.Book.Id">
+                        <td class="formularioDoCarrinho-item">
+                            <a asp-action="Details" asp-controller="Books" asp-route-id="@item.Book.Id">
+                                <img class="formularioDoCarrinho-item-imagem" src="@item.Book.CoverUri">
+                            </a>
+                        </td>
+                        <td class="formularioDoCarrinho-item">
+                            <h2 class="formularioDoCarrinho-item-titulo">
+                                @item.Book.Title
+                            </h2>
+                        </td>
+                        <td class="formularioDoCarrinho-item formularioDoCarrinho-item-preco">
+                            <money-display value="@item.Price" />
+                        </td>
+                        <td class="formularioDoCarrinho-item">
+                            <input class="formularioDoCarrinho-item-quantidade" type="number" min="1" value="@item.Quantity">
+                        </td>
+                        <td class="formularioDoCarrinho-item formularioDoCarrinho-item-preco formularioDoCarrinho-item-preco-total">
+                            <money-display value="@item.TotalPrice" />
+                        </td>
+                        <td class="formularioDoCarrinho-item">
+                            <form asp-action="DeleteFromCart" asp-controller="Cart" method="post">
+                                <button class="formularioDoCarrinho-item-button" type="submit" name="bookId" value="@item.Book.Id">
+                                    <img class="formularioDoCarrinho-item-remover-imagem" src="~/images/trash.png" alt="X" title="Remover">
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+
+            <tfoot class="formularioDoCarrinho-rodape">
+                <tr>
+                    <td class="formularioDoCarrinho-rodape-item formularioDoCarrinho-finalizar" colspan="5">
+                        <form class="formularioDoCarrinho" action="/cart" method="post">
+                            <button class="formularioDoCarrinho-finalizar-botao" type="submit" name="checkout">
+                                Finalizar<span class="formularioDoCarrinho-finalizar-botao-texto" role="presentation">compra</span>
+                            </button>
+                        </form>
+                    </td>
+                    <td id="formularioDoCarrinho-preco-carrinho" class="formularioDoCarrinho-rodape-item">
+                        <money-display value="@Model.TotalPrice"/>
+                    </td>
+                </tr>
+            </tfoot>
+        </table>
+    </section>
+</main>
+
+@section Scripts {
+<script >
+    (function () {
+        var totalPrice = document.getElementById('formularioDoCarrinho-preco-carrinho').children[0];
+        var countElements = document.getElementsByClassName('formularioDoCarrinho-item-quantidade');
+
+        for (var i = 0; i < countElements.length; i++) {
+            var elem = countElements[i];
+            elem.addEventListener("input", (e) => { 
+                var row = e.target.closest('tr');
+                var price = row.getElementsByClassName('formularioDoCarrinho-item-preco-total')[0].children[0];
+                var value = +e.target.value;
+                var bookId = row.getAttribute('data-book');
+
+                var xhr = new XMLHttpRequest();
+                xhr.open('POST', `Cart/SetBookQuantity`);
+                xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+                xhr.onload = function () {
+                    if (xhr.status === 200) {
+                        var result = JSON.parse(xhr.responseText);
+
+                        totalPrice.textContent = result.cartTotalPrice;
+                        price.textContent = result.bookTotalPrice;
+                    }
+                };
+                xhr.send(encodeURI(`bookId=${bookId}&quantity=${value}`));
+            });
+        }
+    })();
+</script>
+}

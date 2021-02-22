@@ -1,0 +1,31 @@
+﻿@model BooksCategoryViewModel
+@{
+    ViewData["Title"] = "Category";
+}
+
+<header class="cabecalhoDaColecao" id="colecao-livros-de-business">
+    <img src="//cdn.shopify.com/s/files/1/0155/7645/t/232/assets/icon-business-branco.svg?154916844045550827" alt="" class="cabecalhoDaColecao-icone">
+    <h1 class="cabecalhoDaColecao-titulo" itemprop="name">Livros de @Model.CategoryName</h1>
+</header>
+
+@foreach (var item in Model.Items)
+{
+    <h2 class="vitrineDaColecao-titulo vitrineDaColecao-titulo--business container">Livros de @Model.CategoryName <span>/ @item.Key </span></h2>
+    <section class="vitrineDaColecao container">
+        <ul class="vitrineDaColecao-lista">
+            @foreach (var book in item.Value)
+            {
+                <li class="livroNaVitrine vitrineDaColecao-produto">
+                    <a asp-controller="Books" asp-action="Details" asp-route-id="@book.Id" class="livroNaVitrine-link" title="@book.Title">
+                        <div class="livroNaVitrine-imagemContainer" role="presentation">
+                            <img class="livroNaVitrine-imagem " src="@book.CoverUri" alt="@book.DisplayName" title="@book.DisplayName">
+                        </div>
+                        <span class="livroNaVitrine-nome">
+                            @book.DisplayName
+                        </span>
+                    </a>
+                </li>
+            }
+        </ul>
+    </section>
+}
